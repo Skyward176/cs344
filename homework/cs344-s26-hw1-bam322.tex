@@ -24,6 +24,7 @@
 \usepackage{tikz} % For drawing diagrams
 \usepackage{siunitx} % For units
 \usepackage{graphicx}
+\usepackage{float}
 
 \usetikzlibrary{arrows.meta, positioning}
 
@@ -434,7 +435,7 @@
             % as this template and you should see that getting compiled into your solution. You can change the width=0.5\textwidth command to fix the size of the figure
             % in the final PDF. Finally, if the figure appears in the next page, do not worry about it as they will still have the proper caption.
             %=====================================================
-            \begin{figure}[!ht]
+            \begin{figure}[H]
               \centering
               \IfFileExists{problemA.pdf}{\includegraphics[width=0.5\textwidth]{problemA.pdf}}{No Figure Yet}
               \caption{Recursion tree for algorithm $A$.}
@@ -446,11 +447,10 @@
           to combine the solutions and output the answer.
 
           \begin{solution}
-            \begin{figure}[!ht]
+            \begin{figure}[H]
               \centering
               \IfFileExists{problemB.pdf}{\includegraphics[width=0.5\textwidth]{problemB.pdf}}{No Figure Yet}
-              \caption{Recursion tree for algorithm $B$.}
-            \end{figure}
+              \caption{Recursion tree for algorithm $B$.} \end{figure}
           \end{solution}
 
         \item Algorithm $C$ divides an instance of size $n$ into $5$ subproblems of size $n/2$ each, recursively solves each one, and then takes $O(n^{0.8})$ time
@@ -458,7 +458,7 @@
           \begin{solution}
             Solution to part (c) goes here. % Delete this line and write your own solution here.
 
-            \begin{figure}[!ht]
+            \begin{figure}[H]
               \centering
               \IfFileExists{problemC.pdf}{\includegraphics[width=0.5\textwidth]{problemC.pdf}}{No Figure Yet}
               \caption{Recursion tree for algorithm $C$.}
@@ -471,7 +471,7 @@
           \begin{solution}
             Solution to part (d) goes here. % Delete this line and write your own solution here.
 
-            \begin{figure}[!ht]
+            \begin{figure}[H]
               \centering
               \IfFileExists{problemD.pdf}{\includegraphics[width=0.5\textwidth]{problemD.pdf}}{No Figure Yet}
               \caption{Recursion tree for algorithm $D$.}
@@ -484,7 +484,7 @@
           \begin{solution}
             Solution to part (e) goes here. % Delete this line and write your own solution here.
 
-            \begin{figure}[!ht]
+            \begin{figure}[H]
               \centering
               \IfFileExists{problemE.pdf}{\includegraphics[width=0.5\textwidth]{problemE.pdf}}{No Figure Yet}
               \caption{Recursion tree for algorithm $E$.}
@@ -517,7 +517,7 @@
         \end{itemize}
 
         \begin{solution}
-
+          This is just $O(n^2)$ because the outer loop runs (some multiple of) n times and so does the inner loop, which approaches n*n or $O(n^2)$
         \end{solution}
 
       \item
@@ -532,7 +532,7 @@
         \begin{solution}
           \
 
-          $f(n) = \theta(log_3 n)$
+          $f(n) = \theta(log_3 n)$ This is true because this is just repeatedly dividing by 3 until n is a small number. repeated division in a loop gives log time.
         \end{solution}
 
       \item
@@ -547,7 +547,7 @@
         \begin{solution}
           \
 
-          $f(n) = \theta(\log\log n)$
+          $f(n) = \theta(\log\log n)$ This is true because we are terminating the loop when our index variable reaches a small value and our index value is decremented by repeatedly taking the square root, which corresponds to $log(log n)$ reps
         \end{solution}
 
       \item
@@ -562,7 +562,11 @@
             \end{itemize}
         \end{itemize}
         \begin{solution}
-          Solution to part (d) goes here. % Delete this line and write your own solution here.
+          \
+
+          $f(n) = \theta(n^3)$
+          
+          This is because the outer loop runs n times and the inner runs somewhere in the order of $n^2$ times.
         \end{solution}
 
       \item
@@ -579,7 +583,7 @@
             \end{itemize}
         \end{itemize}
         \begin{solution}
-          Solution to part (e) goes here. % Delete this line and write your own solution here.
+          $f(n) = \theta(n^2 * \log n)$ This is because the inner and outermost loops run n times and the middle on runs log n times and $n*n*\log n = n^2 \log n$
         \end{solution}
 
     \end{enumerate}
@@ -601,13 +605,41 @@
       \item [(a)] Prove the correctness of  \textbf{Slow-Sort}. \grade{15}
 
         \begin{solution}
-          Solution to part (a) goes here. % Delete this line and write your own solution here.
+          \
+
+          For the trivial cases where $n<100$, slow sort is proven because it just runs merge sort, which is proven. 
+          
+
+          We then have the other basic case where $n = 101$
+
+
+          In this case, we first sort an array of size 100 with all but the last item of the array in it.
+
+
+          The result of this is an array that is sorted except for the position of the last element. The first element in the array is (most likely) the smallest in the array *unless* the unsorted item is. 
+
+
+          Now we sort an array of size 100 with all but the first item of the array in it. This sorting run will do almost nothing except for insert the last item in the array where it belongs. The array is most likely now sorted, unless the final item (of the full 101 item array) happens to have been the smallest, in which case it is at the front of the subarray.
+
+
+          Now we sort an array of size 100 with all but the last item of the array in it. This will do nothing except for move the correct item into the front of the array as the smallest item. The 101 item array is now solved.
+
+
+          It now follows by induction that all arrays larger than this will devolve into this fundamental case.
         \end{solution}
 
       \item [(b)] Write a recurrence for  \textbf{Slow-Sort} and use the recursion tree method to solve this recurrence and find the \emph{tightest asymptotic} upper bound on the runtime of \textbf{Slow-Sort}. \grade{10}
 
         \begin{solution}
-          Solution to part (b) goes here. % Delete this line and write your own solution here.
+          $T(n) = 3T(n-1)$
+
+          $f(n) = O(3^n)$
+
+          \begin{figure}[H]
+            \centering
+            \IfFileExists{problem4.pdf}{\includegraphics[width=0.5\textwidth]{problem4.pdf}}{No Figure Yet}
+            \caption{Recursion tree for algorithm $A$.}
+          \end{figure}
         \end{solution}
 
     \end{enumerate}
@@ -633,7 +665,18 @@
     Prove that this issue won't affect our analysis and we still $O(n^{\log_2 3})$ complexity. \grade{20}
 
     \begin{solution}
-      Solution to Problem 5 goes here.
+      This is true because the $n/2 +1 \approx n/2$ and therefore as $n \to \infty$ that difference is irrelevant.
+
+      Or, more formally: 
+      
+
+      $3T(n/2) + O(n) = 2T(n/2) + T(n/t+1)$
+
+      $T(n/2) = T(n/2+1)$
+
+      $\lim_{n \to \infty} \frac{\frac{n}{2}}{\frac{n}{2} + 1} = 1$
+
+
     \end{solution}
 
   \end{problem}
