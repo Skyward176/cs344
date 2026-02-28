@@ -131,7 +131,7 @@
 
 \subsection*{Acknowledgment (to be reviewed and edited as needed)}
 \begin{tcolorbox}[colframe=black,colback=white,arc=5mm]
-  I, \textbf{Iris Martinez (bam322)}, completed this assignment individually. For assitance in LaTeX typesetting, I referred to Gemini 3 Pro for assitance. AI tools were not used in the development of solutions. For problem 1, I made use of a graphic calculator to inform my observations of function behavior and guide my proofs. \textbf{I hereby affirm that all external assistance utilized in the preparation of this document has been properly acknowledged}.
+  I, \textbf{Iris Martinez (bam322)}, completed this assignment individually. For assitance in LaTeX typesetting, I referred to Gemini 3 Pro for assitance.For problem 1, I made use of a graphing calculator to inform my observations of function behavior and guide my proofs. In part c of problem 1, I referenced the wikipedia page on the stirling approximation of factorials. In problem 2, i made use of the algorithms book when i forgot the details of solving recursion trees.\textbf{I hereby affirm that all external assistance utilized in the preparation of this document has been properly acknowledged}.
 \end{tcolorbox}
 
 \finishline
@@ -414,7 +414,18 @@
     \end{problem}
 
     \begin{solution}
-      Solution to part (c) goes here. % Delete this line and write your own solution here.
+      \begin{enumerate}
+        \item $f(n) = \theta(g(n))$
+        \item $f(n) = \omega(g(n))$
+        \item $f(n) = \theta(g(n))$
+        \item $f(n) = \omega(g(n))$
+        \item $f(n) = \omega(g(n))$
+        \item $f(n) = O(g(n))$
+        \item $f(n) = \omega(g(n))$
+        \item $f(n) = \omega(g(n))$
+        \item $f(n) = \omega(g(n))$
+        \item $f(n) = O(g(n))$
+      \end{enumerate}
     \end{solution}
 
     \newpage
@@ -450,7 +461,8 @@
             \begin{figure}[H]
               \centering
               \IfFileExists{problemB.pdf}{\includegraphics[width=0.5\textwidth]{problemB.pdf}}{No Figure Yet}
-              \caption{Recursion tree for algorithm $B$.} \end{figure}
+              \caption{Recursion tree for algorithm $B$.}
+            \end{figure}
           \end{solution}
 
         \item Algorithm $C$ divides an instance of size $n$ into $5$ subproblems of size $n/2$ each, recursively solves each one, and then takes $O(n^{0.8})$ time
@@ -565,7 +577,7 @@
           \
 
           $f(n) = \theta(n^3)$
-          
+
           This is because the outer loop runs n times and the inner runs somewhere in the order of $n^2$ times.
         \end{solution}
 
@@ -607,23 +619,17 @@
         \begin{solution}
           \
 
-          For the trivial cases where $n<100$, slow sort is proven because it just runs merge sort, which is proven. 
-          
+          For the trivial cases where $n<100$, slow sort is proven because it just runs merge sort, which is proven.
 
           We then have the other basic case where $n = 101$
 
-
           In this case, we first sort an array of size 100 with all but the last item of the array in it.
 
-
-          The result of this is an array that is sorted except for the position of the last element. The first element in the array is (most likely) the smallest in the array *unless* the unsorted item is. 
-
+          The result of this is an array that is sorted except for the position of the last element. The first element in the array is (most likely) the smallest in the array *unless* the unsorted item is.
 
           Now we sort an array of size 100 with all but the first item of the array in it. This sorting run will do almost nothing except for insert the last item in the array where it belongs. The array is most likely now sorted, unless the final item (of the full 101 item array) happens to have been the smallest, in which case it is at the front of the subarray.
 
-
           Now we sort an array of size 100 with all but the last item of the array in it. This will do nothing except for move the correct item into the front of the array as the smallest item. The 101 item array is now solved.
-
 
           It now follows by induction that all arrays larger than this will devolve into this fundamental case.
         \end{solution}
@@ -667,15 +673,13 @@
     \begin{solution}
       This is true because the $n/2 +1 \approx n/2$ and therefore as $n \to \infty$ that difference is irrelevant.
 
-      Or, more formally: 
-      
+      Or, more formally:
 
       $3T(n/2) + O(n) = 2T(n/2) + T(n/t+1)$
 
       $T(n/2) = T(n/2+1)$
 
       $\lim_{n \to \infty} \frac{\frac{n}{2}}{\frac{n}{2} + 1} = 1$
-
 
     \end{solution}
 
@@ -698,7 +702,24 @@
 
   \end{problem}\grade{20}
   \begin{solution}
-    Solution to Problem 6 goes here.
+    \
+
+    1.
+
+    $T(n) = 9T(\frac{n}{3}) + O(N)$
+
+    $T(n) = O(n^{\log_3 9})$
+
+    $T(n) = O(n^{2})$
+
+    \hrule
+    2.
+
+    $T(n) = 5T(\frac{n}{3}) + O(N)$
+
+    $T(n) = O(n^{\log_3 5})$
+
+    $T(n) \approx O(n^{1.46})$
   \end{solution}
 
   \finishline
@@ -711,10 +732,20 @@
     \begin{enumerate}
       \item[(a)] When we have only one vase. Once we break the vase, there is nothing else we can do. \grade{+2}
 
+        From floor 1 to n, throw the vase. When it breaks, we have found L.
+        This is $O(n)$. It must be so given that we may only use one vase.
+
       \item[(b)] When we have  four vases. Once we break all four vases, there is nothing else we can do. \grade{+4}
 
-      \item[(c)] When we have an unlimited number of vases.  \grade{+4}
+        Throw from n/2. If it breaks, throw from n/4. If it doesn't, throw from 3n/4.
 
+        From this point, throw again. If it breaks, throw from the halfway point above where we just threw from. Otherwise, throw from the lower one.
+
+        Repeat this one more time, from the new halfway point. If it breaks, throw from the bottom of the half below the level we were just on and go to each floor ascending. If it doesn't throw from each floor above in ascending order. We find L. This is $O(n/8)$ which is still basically $O(n)$
+      \item[(c)] When we have an unlimited number of vases.  \grade{+4}
+        Just use binary search. Throw from the middle. If it breaks throw from the middle of the lower half. If not throw from the middle of the upper half.
+
+        This is O(logn).
     \end{enumerate}
   \end{challenge}
 
