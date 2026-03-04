@@ -156,12 +156,14 @@
   Design an \( O(\log n) \)-time algorithm to find a local minimum.
 
 \end{problem}
-
 \begin{solution}
-
-  %=================================================
-  % 1. THE ALGORITHM %=====================================================
-
+  \begin{enumerate}
+    \item First, set low to index 1 and high to index n.
+    \item Set middle to be the floor of (low + high) / 2.
+    \item If A[middle] is a local minimum of its neighbors, return it. 
+    \item Now, run the algorithm on the left half of the array where low = low and high = middle -1 and on the right half with low = middle+1 and high = high.
+    \item If A[middle] is not a local minimum, then check if A[middle-1] < A[middle]. If this is the case, then there must be a local minimum in the left half of the array. Otherwise, there must be a local minimum in the right half of the array. Run recursively on the right half.
+  \end{enumerate}
   %=================================================
   % 2. PROOF OF CORRECTNESS %=====================================================
 
