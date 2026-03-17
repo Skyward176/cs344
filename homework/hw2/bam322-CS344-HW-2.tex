@@ -128,7 +128,7 @@
 
 \subsection*{Acknowledgment (to be reviewed and edited as needed)}
 \begin{tcolorbox}[colframe=black,colback=white,arc=5mm]
-  I, \textbf{Iris Martinez} consulted with (yada yada yada). \textbf{I hereby affirm that all external assistance utilized in the preparation of this document has been properly acknowledged}.
+  I, \textbf{Iris Martinez} consulted with lecture notes and AI generated lessons on hashtables and expected values. \textbf{I hereby affirm that all external assistance utilized in the preparation of this document has been properly acknowledged}.
 \end{tcolorbox}
 
 \finishline
@@ -157,19 +157,26 @@
 
 \end{problem}
 \begin{solution}
+  \
+
+  \textbf{Algorithm:}
+  \
   \begin{enumerate}
     \item First, set low to index 1 and high to index n.
     \item Set middle to be the floor of (low + high) / 2.
-    \item If A[middle] is a local minimum of its neighbors, return it. 
-    \item Now, run the algorithm on the left half of the array where low = low and high = middle -1 and on the right half with low = middle+1 and high = high.
-    \item If A[middle] is not a local minimum, then check if A[middle-1] < A[middle]. If this is the case, then there must be a local minimum in the left half of the array. Otherwise, there must be a local minimum in the right half of the array. Run recursively on the right half.
+    \item If A[middle] is a local minimum of its neighbors, return it.
+    \item If A[middle] is not a local minimum, then check if $A[middle-1] < A[middle]$. If this is the case, then there must be a local minimum in the left half of the array. Otherwise, there must be a local minimum in the right half of the array. Run recursively on the corresponding half.
   \end{enumerate}
-  %=================================================
-  % 2. PROOF OF CORRECTNESS %=====================================================
-
+  \textbf{Proof:}
+  \
+  We are given an array where the first and last elements form the left and right boundaries of local minima, respectively. We check the middle in between each iteration. If it isn't a local minimum, we split the array into halves, and check again. This results in a maximum of logn iterations. Because we always follow the half where there is a value smaller than the middle (and the extremes are necessarily larger), we always move towards a minimum.
   %=================================================
   % 3. RUN TIME ANALYSIS %=====================================================
 
+  \textbf{Runtime:}
+  \
+
+  Because we split the array in half each iteration, this runs in O(logn) time. It follows the same recursion as binary search, since it mechanically does the same.
 \end{solution}
 
 \newpage
@@ -186,16 +193,34 @@
 \end{problem}
 
 \begin{solution}
+  \
 
-  %=================================================
-  % 1. THE ALGORITHM %=====================================================
+  \textbf{Algorithm:}
+  \
+  \begin{enumerate}
+    \item Compare the medians of both arrays.
+    \item \textbf{Rule 1}: In the case of whichever array has a smaller median, all elements below it are in the n/2 smallest numbers (smaller than the overall median of the array).
 
-  %=================================================
-  % 2. PROOF OF CORRECTNESS %=====================================================
+      All elments above the median of the array with the larger median are larger than the overall median array (in the n/2 largest numbers).
 
-  %=================================================
-  % 3. RUN TIME ANALYSIS %=====================================================
+      Therefore, we make a subarray of array 1 and a subarray of array 2, removing the n/2 smallest elements from the array with the smallest median and the same number from the top of the array with the larger median.
+    \item Find the median of the subarrays and compare them. Again, rule 1 applies.
+    \item When our we are left with one item in each subarray, return the smaller one.
+    \item This gives the n-th smallest number in both arrays, or their median.
+  \end{enumerate}
 
+  \textbf{Proof:}
+  \
+
+  In the base case of two arrays of length 1, the median (when defined as the nth smallest) is the smaller of the two numbers.
+
+  When we throw away the upper half of the array with the larger median and the lower half of the array with the smaller median, we are halving the list of potential overall medians. We know this is true because in the case of the smaller median array, all values less than its median are also smaller than the median of the larger array, which means they are in the smaller n/2 items. By the same logic, in the larger array, those above the median are in the larger n/2 items.
+
+  We now have halved our search space and found the first half of the first n smallest numbers. now we take the medians again, similarly restricting down our upper and lower bounds for the median again. Eventually, this always goes to the base case where we pick the smaller and receive the nth smallest element.
+  \textbf{Runtime:}
+  \
+
+  Because each partition cuts the two arrays in half, we are running in O(logn) time.
 \end{solution}
 
 \newpage
@@ -213,16 +238,43 @@
 \end{problem}
 
 \begin{solution}
+  \
 
-  %=================================================
-  % 1. THE ALGORITHM %=====================================================
+  \textbf{Algorithm:}
+  \
 
-  %=================================================
-  % 2. PROOF OF CORRECTNESS %=====================================================
+  \begin{verbatim}
+    sortedArray = mergesort(A)
+    minDistance = (infinity, (-1,-1))
+    for int i=0 to (n-2):
+      difference = absoluteValue(sorted_arr[i+1] - sorted_arr[i])
+      if difference<minDistance[0]:
+        minDistance = (difference, (i+1, i))
 
-  %=================================================
-  % 3. RUN TIME ANALYSIS %=====================================================
+    i = 0
+    j = n-1
+    minSum = (infinity, (-1,-1))
+    while i < j:
+      sum = absoluteValue(sortedArray[i] + sortedArray[j])
+      if sum<minSum[0]:
+        minSum = (sum, (i,j))
+      if absoluteValue(sortedArray[i]) > absoluteValue(sortedArray[j]):
+        i++
+      else:
+        j--
 
+    output_1 = (sortedArray[minDistance[1][0]], sortedArray[minDistance[1][1]])
+    output_2 = (sortedArray[minSum[1][0]], sortedArray[minSum[1][1]])
+  \end{verbatim}
+
+  \textbf{Proof:}
+  \
+  This works because in a sorted(increasing) array, the next element is necessarily the nearest neghbor in the increasing direction. Therefore, once sorted, we can do n comparisons to see which two neighbors have the smallest absolute value difference between them. This gives us output 1.
+
+  \textbf{Runtime:}
+  \
+
+  We first run mergesort, which takes nlogn time. Then we iterate through every item in the array twice, which takes 2N time. This simplifies to nlogn time, with the sort being the only significant factor.
 \end{solution}
 
 \newpage
@@ -232,16 +284,51 @@
 \end{problem}
 
 \begin{solution}
+  \
 
-  %=================================================
-  % 1. THE ALGORITHM %=====================================================
+  \textbf{Algorithm:}
+  \
 
-  %=================================================
-  % 2. PROOF OF CORRECTNESS %=====================================================
+  For brevity- we can view this as just running mergesort with this modification to the merge function:
 
-  %=================================================
-  % 3. RUN TIME ANALYSIS %=====================================================
+  \begin{verbatim}
+    merge(list1, list2, inversions):
+      i = 0 # index counter for list 1
+      j = 0 # index counter for list 2
 
+      while i<length(list1) and j<length(list2)
+        if list1[i] <= list2[j]:
+          output.append(list1[i])
+          i++
+        else:
+          output.append(list2[j])
+          j++
+          inversions += length(list1) - i
+
+      while i < length(list1):
+        output.append(list1[i])
+        i++
+
+      while j < length(list2):
+          output.append(list2[j])
+          j++
+
+      return output, inversions
+
+  \end{verbatim}
+  \
+
+  \textbf{Proof:}
+  \
+
+  In mergesort, we split the array into n subarrays. Then, we merge them back together into order. Whenever we find that an item in the left half is bigger than one on the right, we perform swaps. Each time we do this, we add to our number of inversions the number of values that are exclusively larger in the left half than the value in the right half, in other words, the number of inversions resolved.
+  When we have sorted the whole array and propagated our total, we have managed to count the number of inversions resolved by the algorithm.
+  \
+
+  \textbf{Runtime:}
+  \
+
+  The division step of mergesort runs log n times. We run n merges. This gives O(nlogn) time complexity.
 \end{solution}
 
 \newpage
@@ -271,14 +358,7 @@
 
     \begin{solution}
 
-      %=================================================
-      % 1. THE ALGORITHM %=====================================================
-
-      %=================================================
-      % 2. PROOF OF CORRECTNESS %=====================================================
-
-      %=================================================
-      % 3. RUN TIME ANALYSIS %=====================================================
+      I will skip straight to the O(N) alg.
 
     \end{solution}
 
@@ -291,16 +371,47 @@
 \end{problem}
 
 \begin{solution}
+\
 
-%=================================================
-% 1. THE ALGORITHM %=====================================================
+\textbf{Algorithm:}
+\
 
-%=================================================
-% 2. PROOF OF CORRECTNESS %=====================================================
+  \begin{verbatim}
+    def maxProdRecursion(array, index):
+      if index == 0:
+        return (array[0], array[0])
 
-%=================================================
-% 3. RUN TIME ANALYSIS %=====================================================
+      (bestProduct, prevBestProduct) = maxProdRecursion(A, index - 1)
 
+      newProduct = max(A[index], (prevBestProduct*A[index]))
+
+      if newProduct > bestProduct:
+        bestProduct = newProduct
+
+      return(bestProduct, newProduct)
+    def MaxProd(A):
+      lastIndex = len(A) - 1
+      bestProduct, _ = maxProdRecursion(A, lastIndex)
+      return(bestProduct)
+  \end{verbatim}
+\
+\textbf{Proof:}
+
+\
+In the base case, this just gives back the value of the first item in the array.
+For the recursion, our function returns the best product found in the whole array so far, and the best product that ends at the previous index.
+For our current index, we are iterating on, the best product we can finding ending in that index is either current element by itself, or it's the current element multiplied by the best product of the subarray
+ending right before it. We check both options and save the winner as our new best product ending at this index. This works because we aren't dealing with negatives.
+Finally, we compare the product of this new subarray to the overall best product we've seen anywhere in the array so far.
+If it's bigger, it becomes the new overall best. Since we do this for every single element as the recursion unwinds,
+we are guaranteed to have found the absolute largest contiguous product by the time we return to the main wrapper function.
+
+\textbf{Runtime:}
+
+\
+This algorithm is O(N) because each recursive call makes only one other recursive call (constant work per layer) and it goes from an array of length n to an array of length 1, or N recursive calls.
+
+This satisfies the recursion $T(N) = T(N-1) + O(1)$ where the constant work is just the comparisons for tracking the current best subarray product we've found.
 \end{solution}
 
 \newpage
@@ -318,31 +429,63 @@ You may assume that all characters in the alphabet can represented by distinct i
   \item[(a)] Design an algorithm for this problem with worst-case  runtime of $O(n+M)$.
 
     \begin{solution}
+      \
 
-      %=================================================
-      % 1. THE ALGORITHM %=====================================================
+      \textbf{Algorithm:}
+      \
 
-      %=================================================
-      % 2. PROOF OF CORRECTNESS %=====================================================
+      let counts be an array of length M, initialize it with zeros
 
-      %=================================================
-      % 3. RUN TIME ANALYSIS %=====================================================
+      for every character in string A, increment the corresponding index in the counts array
 
+      for every character in string B, decrement the corresponding index in the counts array
+
+      if any value in the counts array is nonzero, return false. Else, it is true.
+
+      \
+      \textbf{Proof:}
+
+      \
+      This is trivially true due to our given definition of anagram. They must have the same exact number of the same exact characters to be anagrams of each other.
+
+      Therefore, by first creating a count of which characters are present in one string and seeing if the second string "cancels out" the counts, we determine if the second string has the exact same characters in the same number as the first.
+      \
+
+      \textbf{Runtime:}
+
+      The initialization and checking of the count array each take M time. Iterating over each string takes n time. Therefore we have O(2n + 2M), which we simplify to O(n+M)
     \end{solution}
 
   \item[(b)] Design a randomized algorithm for this problem with worst-case expected runtime of $O(n)$.
 
     \begin{solution}
+      \
 
-      %=================================================
-      % 1. THE ALGORITHM %=====================================================
+      \textbf{Algorithm:}
+      \
 
-      %=================================================
-      % 2. PROOF OF CORRECTNESS %=====================================================
+      Create hash table
 
-      %=================================================
-      % 3. RUN TIME ANALYSIS %=====================================================
+      for every character in string A, if it is not in the hash table, add it to the hash table with a value of one.
+      If it is in the hash table, increment the value by one
 
+      for every character in string B, if it is present in the hash table and the value is greater than zero, decrement the value by one.
+      Otherwise, if it is not in the hash table or the value stored is zero, return false.
+
+      If we don't fail before this point, we return true.
+
+      \
+      \textbf{Proof:}
+
+      \
+      The same as before, this is trivially true due to our given definition of anagram. They must have the same exact number of the same exact characters to be anagrams of each other.
+
+      In this case, we know this works because first- the strings are the exact same length. It is impossible for the two to have the exact same number of certain characters but one of them contain a character unique from the other.
+      Because they are the same length, if we never tried to set a value below zero in the hash table, we know they had identical number of each character contained in them.
+      \
+
+      \textbf{Runtime:}
+      This runs in O(n) time because we iterate over each string once O(n+n) which simplifies to just O(n). If we use a randomized hash function and universal hashing, we get constant time lookups, so we can ignore access time as well, giving us the O(n) algorithm.
     \end{solution}
 
 \end{enumerate}
@@ -363,14 +506,13 @@ For instance, if $n=10$ and the array is $A=[8,7,2,5,4,6,3,1,10,9]$, we can outp
   \item[(a)]  Suppose we sample an index $i$ from $\set{1,\ldots,n}$ uniformly at random. What is the probability that $i$ is a correct answer, i.e., $A[i] \mod 5 = 0$?
 
     \begin{solution}
-
+      $p = \frac{n/5}{n}$
     \end{solution}
 
   \item[(b)] Suppose we sample $m$ indices from $\set{1,\ldots,n}$ uniformly at random and with repetition. What is the probability that none of these indices is a correct answer?  \grade{5}
 \end{enumerate}
-
 \begin{solution}
-
+  $p = (\frac{4n/5}{n})^M$
 \end{solution}
 
 Now, consider the following simple algorithm for this problem:
@@ -386,6 +528,10 @@ The proof of correctness of this algorithm is straightforward and we skip it in 
   \item[(c)] What is the worst-case \textbf{expected} running time of \textbf{Find-Index-1$(A[1:n])$}? Remember to prove your answer formally.
 \end{enumerate}
 
+\begin{solution}
+  The worst case expected runtime will be O(1). This is because our worst case expectation of our random sample is that it will take five tries to find a value that is a multiple of five.
+\end{solution}
+
 The problem with \textbf{Find-Index-1} is that in the worst-case (and not in expectation), it may actually never terminate! For this reason, let us consider
 a simple modification to  this algorithm as follows.
 
@@ -398,10 +544,6 @@ a simple modification to  this algorithm as follows.
   \item If the for-loop never terminated, go over the array $A$ one element at a time to find an index $i$ with $A[i] \mod 5 =0$ and output it as the answer.
 \end{itemize}
 
-\begin{solution}
-
-\end{solution}
-
 Again, we skip the proof of correctness of this algorithm.
 
 \begin{enumerate}
@@ -412,7 +554,7 @@ Again, we skip the proof of correctness of this algorithm.
 \end{problem}
 
 \begin{solution}
-
+The worst case is O(n), where it had to run a linear search after managing to not sample a multiple of five by terrible luck. The worst case-expected runtime is still O(1) because we still expect to draw a multiple of five every five tries.
 \end{solution}
 
 \newpage
