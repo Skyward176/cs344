@@ -150,16 +150,53 @@
 \end{problem}
 
 \begin{solution}
+  \
 
-  %=================================================
-  % 1. THE ALGORITHM %=====================================================
+  \textbf{Algorithm:}
+  \
+  %=================================================%
+  %               1. THE ALGORITHM                  %
+  %=================================================%
+  \
 
-  %=================================================
-  % 2. PROOF OF CORRECTNESS %=====================================================
+  We set up a memo array of length n+1. The last value is true and represents an empty string that is splittable into zero valid words.
 
-  %=================================================
-  % 3. RUN TIME ANALYSIS %=====================================================
+  Now we do this:
 
+  \begin{verbatim}
+    for i = n to zero:
+      for j up to i:
+        if dict(i,j) == true and (table[j+1] ==true)
+          table[i] = true 
+  \end{verbatim}
+
+  These loops check if there is a valid split of the last n-i characters. 
+
+  The result will be in table[0]. 
+  %================================================%
+  %            2. PROOF OF CORRECTNESS             %
+  %================================================%
+  \
+
+  \textbf{Proof:}
+  \
+
+  \begin{itemize}
+    \item \textbf{Base Case: } For an empty string, it must be splittable into zero valid words. 
+    \item \textbf{Inductive Step: } For a string from i to n, it is splittable if there is a value j where the string from i to j is a valid word and the string after j to n is splittable.
+
+    In the most trivial case. A string of length one (like the letter 'a') is splittable because the substring from 0 to 0 is a word 'a' and the substring after ("") is splittable.
+
+    As we step that boundary down further and further, we will keep finding substrings of the larger array that can be perfectly partitioned into valid words. If this propagates down to the first character, then we know the whole string is splittable. The table in this case saves us the work of having to recalculate if every substring to the right of the boundary is splittable, instead giving a memo of what substrings were splittable.
+  \end{itemize}
+  \
+
+  \textbf{Runtime:}
+  \
+  %================================================%
+  %            3. RUN TIME ANALYSIS                %
+  %================================================%
+  The main work of this occurs in two loops over the whole of the string, giving $O(n^2)$ complexity
 \end{solution}
 
 \newpage
@@ -170,8 +207,7 @@
   \[
     \sum_{k=i}^{j} A[k] > 0.
   \]
-  Design and analyze a dynamic programming algorithm that in $O(n^2)$ time finds the smallest number of positive contiguous subarrays of $A$ such that every positive entry of $A$ belongs to exactly one of these subarrays. You can assume that $A$
-  has at least one positive entry and thus the answer is \emph{at least} one.
+  Design and analyze a dynamic programming algorithm that in $O(n^2)$ time finds the smallest number of positive contiguous subarrays of $A$ such that every positive entry of $A$ belongs to exactly one of these subarrays. You can assume that $A$ has at least one positive entry and thus the answer is \emph{at least} one.
 
   \medskip
 
@@ -186,14 +222,48 @@
 
 \begin{solution}
 
-  %=================================================
-  % 1. THE ALGORITHM %=====================================================
+  %=================================================% 1. THE ALGORITHM %=====================================================
+  \
+  
+  \begin{verbatim}
+    def function(A[n])
+      memo = [0:n]
+      memo[0] = 0
+      memo[1:n] = +infty
+      for i in range 1:n:
+        if A[i] <= 0:
+          memo[i] = memo[i-1]
+      
+        cur = 0 
+        for j in (i down to 1):
+          cur = cur + A[j]
+          if cur > 0 and memo[i-1] != +infty:
+            memo[i] = min(memo[i], memo[i-1] + 1)
+      return memo[n] 
+  \end{verbatim}
 
   %=================================================
   % 2. PROOF OF CORRECTNESS %=====================================================
+  \begin{enumerate}
+    \item \textbf{Base: } An empty array requires 0 positive contiguous subarrays. 
+    \item \textbf{Inductive Step: } 
+    \
 
+    If we assume that the memo array stores correct solutions for the array from 0 to an index i, then this is what happens when we calculate memo[i+1]:
+    \
+
+    If A[i+1] is negative, it doesn't affect our solution and we can carry over the answer from a[i]. So memo[i+1] = memo[i]
+
+    By taking the running sum from the index down to 0, we determine that the subsequent indices are part of the same subarray and therefore have the same memoized solution. Only when the current index we're adding makes the solution smaller does it change. 
+
+    So either the new value forms part of one of the existing subarrays and the previous value gets carried forward, or it doesn't and we add one to the solution at that index.
+    \
+    \item  
+  \end{enumerate}
   %=================================================
   % 3. RUN TIME ANALYSIS %=====================================================
+
+  This has two nested loops that iterate over the array, so its $O(N^2)$
 
 \end{solution}
 
@@ -221,12 +291,38 @@
 
   %=================================================
   % 1. THE ALGORITHM %=====================================================
+  \
+    
+  \begin{verbatim}
+    def special(n):
+      array products;
+      products[0] = (0,0)
 
+      for i in range(1, n + 1):
+        if i >= 197 and products[i - 197] is not None:
+            a, b = products[i - 197]
+             products[i] = (a + 1, b)
+              
+          elif i >= 232 and products[i - 232] is not None:
+              a, b = products[i - 232]
+              products[i] = (a, b + 1)
+              
+      # Check if we found a valid combination for the target n
+      if products[n] is not None:
+          return products[n]
+      else:
+          return "no solution"
+  \end{verbatim}
   %=================================================
   % 2. PROOF OF CORRECTNESS %=====================================================
-
+  \begin{enumerate}
+    \item \textbf{Base: } The number zero can be formed with a =0 and b= 0.
+    \item \textbf{Inductive Step: } If any number is special, then subtracting 197 or 232 will give a smaller special number. Conversely, counting up by 197 and 232 will give us every subsequent special number. 0+197 = 197, 197 + 197 = 2(197), 197 + 232, etc.
+  \end{enumerate} 
   %=================================================
   % 3. RUN TIME ANALYSIS %=====================================================
+
+  This is going to run in logn times, since the max number of times it would take to confirm that a number isn't special is $log_{197}(n) * log_{232}(n)$
 
 \end{solution}
 
