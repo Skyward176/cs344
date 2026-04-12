@@ -133,7 +133,7 @@
 
 \subsection*{Acknowledgment (to be reviewed and edited as needed)}
 \begin{tcolorbox}[colframe=black,colback=white,arc=5mm]
-I, \textbf{Iris Martinez (bam322)} worked individually on this assignment. \textbf{I hereby affirm that all external assistance utilized in the preparation of this document has been properly acknowledged}.
+I, \textbf{Iris Martinez (bam322)} worked individually on this assignment. I used several youtube video lectures to help me better understand the material. I used NotebookLM to help me search and reference lecture materials and my notes.\textbf{I hereby affirm that all external assistance utilized in the preparation of this document has been properly acknowledged}.
 \end{tcolorbox}
 
 \finishline
@@ -294,8 +294,7 @@ Describe and analyze an algorithm that computes the largest possible number of g
     \
 
     \textbf{Proof: }
-    This algorithm must be correct because it progressively trims people that don't meet the conditions until it arrives at a maximal set of them to invite. If there were a party larger than one given by this algorithm, this means the algorithm must remove someone wrongly. Because our algorithm runs the outgoing edges and unknown nodes calculation on each node, it cannot ever remove a node that isn't below the thresholds. Therefore, the algorithm cannot arrive at a set that is too small. We can prove this by assuming that the optimal party, O, has one more node than ours, P. Lets call the "mistakenly" removed node of P, x. At the end of the loop where x was added to the deletion queue, every other node met the conditions, and thus $P \cap x$
-
+    This algorithm must be correct because it progressively trims people that don't meet the conditions until it arrives at a maximal set of them to invite. If there were a party larger than one given by this algorithm, this means the algorithm must remove someone wrongly. Because our algorithm runs the outgoing edges and unknown nodes calculation on each node, it cannot ever remove a node that isn't below the thresholds. Therefore, the algorithm cannot arrive at a set that is too small. We can prove this by assuming that the optimal party, O, has one more node than ours, P. Lets call the "mistakenly" removed node of P, x. Our algorithm evaluates each node to see if it should be removed by checking against the conditions. If a node x was removed, it must have lacked enough outgoing edges or unknown nodes. These values cannot increase with any future actions, and therefore deleting a node is always the correct move. Because this example node x is the first and only removal, a previous move could not have invalidated it. Because this is the case, every subsequent graph generated this way also is valid, and therefore every further removal of $x_n$ satisfies the same property of being inherently a valid or "correct" deletion.
 
 
 
@@ -331,22 +330,30 @@ Design and analyze an $O(n+m)$ time algorithm that given a directed graph $G=(V,
 
 %=================================================
     % 1. THE ALGORITHM %=====================================================
+    \
 
+    \textbf{Algorithm: }
+    \
 
-
-
-
+    We use a modified BFS with the following stucture. Rather than keeping track of visited nodes, we track visted nodes with even and odd parity. This is an array of length 2N where for all N vertices, there exists a vertex $N_odd$ and $N_even$. This allows us to model walks that reach a node in even or odd steps from the start node.
+    When bfs exits (having an empty queue), then all the odd indices of the array contain true or false for which vertices can be reached from the origin vertex in an even number of steps. 
+    If we return index $2E-1$ where E is the number of the target node, then we correctly give the true/false of an even walk from V to E
 %=================================================
     % 2. PROOF OF CORRECTNESS %=====================================================
+    \
 
+    \textbf{Proof: }
+    \
 
-
-
+    This is true because we know BFS finds all vertices in a graph(if they are connected). By expanding the array to double the size, we are effectively making a new graph where there are twice as many nodes, one for a node reached with an even number of steps and another for the same node reached with an odd number of steps. When we traverse this graph starting at vertex V, we are only able to reach odd vertices, and all those that can be reached are pushed on to the stack. Then on the next step we can only reach even, and those are pushed onto the queue. We repeat this until we can no longer find any new vertices (find a vertex with an even or an odd walk). The output array will then contain true for all the connected nodes of this doubled graph. The connected nodes represent the idea of node x reached evenly and node x reached oddly,etc. Because bfs fully reaches all possible nodes in a graph, this discovers if there exists an even  walk between any vertex and the start vertex. 
 
 %=================================================
     % 3. RUN TIME ANALYSIS %=====================================================
+    \
 
+    \textbf{Runtime: }
 
+    This runs in O(N+M) time because it is basically just BFS of a graph that is larger than the original. This size increase scales it by a constant factor, so it simplifies to BFS, which runs in O(N+M) 
 \end{solution}
 
 \newpage
@@ -369,20 +376,40 @@ Design and analyze an $O(n+m)$ time algorithm that given a directed graph $G=(V,
 
 %=================================================
     % 1. THE ALGORITHM %=====================================================
+    \
 
+    \textbf{Algorithm: }
 
+    Run BFS. Construct a bfs tree from vertex s. 
+    Run BFS again. Construct a bfs tree from vertex t.
 
+    Loop through every edge f in F. For any edge f, the distance between s and t in a graph that includes that edge is that same as the distance between the first vertex of f and s, and the distance between the second vertex in f and t, plus one.
 
+    Because we have bfs trees from both ends, we get both of these distances for "free" in the form of the depths of all vertices.
+
+    The expression $depth_s[u] + depth_t[v] + 1$ represents going from s to the tail end of the new edge and dist v from the tip of the new edge to the vertex t. The addition of one is to account for the new edge we are traversing in between. 
+
+    our output is $newDepth = min(depth_s[u] + depth_t[v] + 1),depth_s(v)+depth_t[u], newDepth)$ for all f in F, newDepth is initialized to infty.
 
 %=================================================
     % 2. PROOF OF CORRECTNESS %=====================================================
+    
+    \
 
+    \textbf{Proof: }
+    This must be true because for any unweighted graph, bfs always gives the shortest path between the root vertex and its children (where the depth of the BFS tree gives that distance). 
+    If we have two such trees, we have the minimum distances from the origin and target nodes to every other node. 
+
+    We can find what the change in distance would be by taking the distance between the input of an edge f (which we might call the vertex u) and the output of that edge(which we may call a vertex v) and adding one.
+
+    This is true because we can view a new edge as shortcut of sorts. By figuring out how far it is to the entrance of the shortcut and how far it is to the destination from the exit of the shortcut, we know how long our total trip was. We try the edge forwards and backwards because we have an undirected graph. Therefore the minimum of our expression over all f edges gives the best edge to pick from F.  
 
 
 
 
 %=================================================
     % 3. RUN TIME ANALYSIS %=====================================================
+This runs in $O((2(m+n) + |F|)$ time because we run two BFS operations and then iterate over all F vertices doing constant time lookups. This simplifies down to $O(m + n + |F|)$ 
 
 
 \end{solution}
@@ -404,20 +431,33 @@ Describe an algorithm to find all vertices in $G$ that can be reached from a giv
 
 %=================================================
     % 1. THE ALGORITHM %=====================================================
+    \
 
+    \textbf{Algorithm: }
+
+    We will again modify BFS.
+
+    This time, we will create a new graph with 3n nodes. For every node in the original graph, there are three nodes where each of the three represents reaching the original node via an edge of a given color.
+
+    Now we will traverse this graph with bfs starting from the input node. However, we will only enqueue a node if it is of the correct color. So if we are at the node $A_white$, we will only enqueue any vertices of color blue. In order for this to run correctly, we must set the starting node to be $v_blue$, so that it looks for successors accessible via red edges. This represents the same as only traversing blue edges from A in a french flag walk. 
+
+    When the algorithm is finished, all nodes in the tree are accessible via french flag walk starting at the input vertex.
 
 
 
 
 %=================================================
     % 2. PROOF OF CORRECTNESS %=====================================================
-
-
+    \textbf{Proof: }
+    
+    As in problem 4, all we are doing is making a new graph with more vertices that encodes not only the different nodes, but also the different kinds of edges that can reach that node. Because this is still just another graph, bfs still finds all reachable nodes starting from a vertex v. By modifying our traversal so that it ignores colors that are out of sequence, we make sure that all paths that the algorithm finds and puts into the tree are valid given our conditions. Therefore, because BFS is correct, this algorithm is also correct. 
 
 
 
 %=================================================
     % 3. RUN TIME ANALYSIS %=====================================================
+    \textbf{Proof: }
+    This runs only one bfs and grows the graph by a constant factor. Therefore, this runs in $O(N+M)$ time where N is the number of vertices and M is the number of edges.
 
 
 \end{solution}
@@ -443,20 +483,50 @@ Suppose we are given both an undirected graph $G$ with weighted edges and a mini
 
 %=================================================
     % 1. THE ALGORITHM %=====================================================
+    \
+
+    \textbf{Algorithm A: } 
+    If the edge e was in the MST, do nothing.
+
+    If edge e was not in the MST do the following:
+
+    Add e to the MST, T. Because T is the minimum spanning tree, any additional edge must form a cycle. 
+
+    Run BFS on T starting at the vertex u (the input vertex of edge e). We do this because we know that this new edge is going to form a cycle starting at the vertex it originates from.
+    
+    We stop our BFS when we reach vertex v(the output vertex of edge e). At this point, we have found the full cycle we have created. We remove the heaviest edge in this cycle.
+
+    We return the remaining tree, which is the new MST.
 
 
+    
+    \textbf{Algorithm B: } 
 
+    If edge e was not in the MST, do nothing.
 
+    If the edge was in the MST, we remove it. This splits the tree. We then check for all edges that connect the two halves of the tree. We keep the cheapest one.
 
+    The way we check for edges that connect the two halves of the tree is by taking a list of of edges in each half, then iterating over the list of edges for all edges that connect vertices from one half to the other. 
 %=================================================
     % 2. PROOF OF CORRECTNESS %=====================================================
+    \textbf{Proof A: } 
+    This algorithm works because adding a new edge to an mst necessarily creates a cycle. Because a cycle lets you visit all nodes along it, we can then remove the most expensive edge on that cycle to arrive at a new minimum spanning tree. The tree finds its cheapest configuration, and we don't lose the spanning property by removing just one edge from a cycle.
 
+    \textbf{Proof B: }
+    This works because if the cost of an edge not in the MST goes up, it makes no difference. However, if the cost of an edge in the mst goes up, it may mean that there is a better edge to include than it. 
 
-
+    So we cut the mst in half. Each half is a mst of each subset of vertices. Now we find the cheapest connection between the two islands. This cheapest connection point will form from the two halves the MST of the whole. 
 
 
 %=================================================
     % 3. RUN TIME ANALYSIS %=====================================================
+
+    \textbf{Runtime A: }
+    This algorithm runs in O(T) time, where T is the number of vertices in T. This is because at worst it only needs to iterate over all vertices in the tree once to figure out which to remove.
+
+    \textbf{Runtime B: }
+    This algorithm runs in O(E) time, where E is the number of edges in the whole graph. This is because in the worst case, we end up having to check every edge in the graph to find which form bridges between the two islands formed after we split the MST and keep track of the cheapest bridge to form the new MST.
+
 
 
 \end{solution}
