@@ -277,20 +277,34 @@ Describe and analyze an algorithm that computes the largest possible number of g
 
 %=================================================
     % 1. THE ALGORITHM %=====================================================
+    \
 
+    \textbf{Algorithm: }
 
+    The setup of a list of people and a list of pairs that know each other can represent a graph where every node is a person and every edge is a pair of people that know each other. 
 
+    Iterate through all nodes, calculating the number of outbound edges for every node and the number of "unknown" nodes as well (which is the same as the total number of nodes N - the number of outgoing edges).
 
+    For any node we find where either the number of outbound edges or unknown edges is less than five, we add them to a queue for deletion,D.
+    
+    For every node in the deletion queue, find and remove it from the graph. Then recalculate outgoing edges for all nodes connected to the node. Recalculate unkown nodes for all not related nodes. If any nodes break the rules, add them to the deltion queue. Repeat until the deltion queue is empty. The number of nodes in the graph is the maximum number of invitable people.
 
 %=================================================
     % 2. PROOF OF CORRECTNESS %=====================================================
+    \
 
+    \textbf{Proof: }
+    This algorithm must be correct because it progressively trims people that don't meet the conditions until it arrives at a maximal set of them to invite. If there were a party larger than one given by this algorithm, this means the algorithm must remove someone wrongly. Because our algorithm runs the outgoing edges and unknown nodes calculation on each node, it cannot ever remove a node that isn't below the thresholds. Therefore, the algorithm cannot arrive at a set that is too small. We can prove this by assuming that the optimal party, O, has one more node than ours, P. Lets call the "mistakenly" removed node of P, x. At the end of the loop where x was added to the deletion queue, every other node met the conditions, and thus $P \cap x$
 
 
 
 
 %=================================================
     % 3. RUN TIME ANALYSIS %=====================================================
+    \
+
+    \textbf{Runtime: }
+    The algorithm will run in $O(N^2)$ time. It will take $O(N^2)$ time to calculate the outgoing edges and unknown nodes values. In the worst case, we would cascade into a case where every single node would need to be removed, resulting in $N$ calculations for all $N$ nodes, giving a runtime of $O(2N^2)$ which simplifies to $O(N^2)$
 
 
 \end{solution}
