@@ -219,15 +219,24 @@ which you can also check is the minimum value.
 
 \begin{solution}
 
-%=================================================
-    % 1. THE ALGORITHM %=====================================================
-    just do the shortest item first every time.
+    %====================%
+    %= 1. THE ALGORITHM =%
+    %====================%
+    \
 
+    \textbf{Algorithm: }
+    \
+
+    To minimize the max lateness of jobs, we sort the jobs by deadline and always pick the job in order of earliest deadline. 
 
 
 
 %=================================================
     % 2. PROOF OF CORRECTNESS %=====================================================
+    \
+
+    \textbf{Proof: }
+        Let's assume there was a solution other than the greedy solution. This would mean there exists an occasion where we are doing a job with a later deadline before one with an earlier deadline. In this case, inverting that execution order to match the greedy solution will either not increase the max lateness(in the case that the max lateness occurs due to another job). We also know that it might give a better solution by decreasing the lateness of the event with the earlier deadline. The event with the later deadline, even if it becomes more late, necessarily cannot increase our maximum because the new lateness must necessarily be less than the lateness that the job with the earlier deadline was facing in the "optimal" solution. Therefore the greedy solution is optimal.
 
 
 
@@ -235,6 +244,11 @@ which you can also check is the minimum value.
 
 %=================================================
     % 3. RUN TIME ANALYSIS %=====================================================
+    \
+
+
+    \textbf{Runtime: }
+    This only needs to run one sort then retrieve the items in order of the sort, so it runs in $O(nlogn)$ time
 
 
 \end{solution}
